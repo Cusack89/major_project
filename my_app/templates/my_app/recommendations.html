@@ -1,0 +1,52 @@
+{% extends "my_app/base.html" %}
+
+{% block title %}Recommendations{% endblock %}
+
+{% block content %}
+<h1>Recommendations</h1>
+
+<!-- Injury info -->
+<div>
+    <h3>Your Injury</h3>
+    <p><strong>Body Area:</strong> {{ injury.body_area }}</p>
+    <p><strong>Pain Type:</strong> {{ injury.pain_type }}</p>
+    <p><strong>Severity:</strong> {{ injury.severity }}/10</p>
+    <p><strong>Date:</strong> {{ injury.date_occurred }}</p>
+    {% if injury.notes %}
+        <p><strong>Notes:</strong> {{ injury.notes }}</p>
+    {% endif %}
+</div>
+
+<hr>
+
+<!-- Stretches -->
+<div>
+    <h3>Recommended Stretches</h3>
+
+    {% if stretches %}
+        <ul>
+            {% for stretch in stretches %}
+                <li>
+                    <strong>{{ stretch.name }}</strong><br>
+
+                    {% if stretch.description %}
+                        {{ stretch.description }}<br>
+                    {% endif %}
+
+                    {% if stretch.duration %}
+                        <small>Duration: {{ stretch.duration }}</small>
+                    {% endif %}
+                </li>
+                <br>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No stretches found for this injury.</p>
+    {% endif %}
+</div>
+
+<br>
+
+<a href="{% url 'my_app:injury_form' %}">Log another injury</a>
+
+{% endblock %}

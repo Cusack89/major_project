@@ -1,0 +1,170 @@
+{% extends "my_app/base.html" %}
+
+{% block title %}{{ routine.title }}{% endblock %}
+
+{% block content %}
+
+<style>
+    .routine-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .save-btn {
+        padding: 14px 22px;
+        border-radius: 14px;
+        border: none;
+        font-size: 17px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+
+    .save-btn:hover {
+        transform: scale(1.05);
+    }
+
+    .save-btn:active {
+        transform: scale(0.92);
+    }
+
+    .save {
+        background: #4CAF50;
+        color: white;
+    }
+
+    .unsave {
+        background: #d0d0d0;
+        color: black;
+    }
+
+    .pulse {
+        animation: pulse 0.35s ease;
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.12);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .cover-image {
+        width: 350px;
+        max-width: 100%;
+        border-radius: 12px;
+        margin-bottom: 15px;
+    }
+
+    .tag {
+        background: #eee;
+        padding: 5px 10px;
+        border-radius: 12px;
+        margin-right: 5px;
+        display: inline-block;
+    }
+
+    .stretch-card {
+        border: 1px solid #ccc;
+        padding: 15px;
+        margin-bottom: 12px;
+        border-radius: 10px;
+    }
+
+    .cover-image {
+        width: 100%;
+        max-height: 320px;
+        object-fit: cover;
+        border-radius: 14px;
+        margin-top: 25px;     
+        margin-bottom: 25px;  
+    }
+</style>
+
+
+{% if routine.cover_image_url %}
+    <img src="{{ routine.cover_image_url }}" alt="{{ routine.title }}" class="cover-image">
+{% endif %}
+
+<div class="routine-header">
+    <div>
+        <h1>{{ routine.title }}</h1>
+        <p>{{ routine.description }}</p>
+    </div>
+
+    <button id="saveButton"
+            class="save-btn {% if saved %}unsave{% else %}save{% endif %}"
+            data-routine-id="{{ routine.id }}">
+        {% if saved %}
+            Saved ✓
+        {% else %}
+            Save Routine
+        {% endif %}
+    </button>
+</div>
+
+<p><strong>Difficulty:</strong> {{ routine.difficulty }}</p>
+
+<div>
+    {% for label in routine.labels.all %}
+        <span class="tag">{{ label.name }}</span>
+    {% endfor %}
+</div>
+
+<hr>
+
+<h2>Stretches</h2>
+
+<ol>
+    {% for item in routine.routinestretch_set.all|dictsort:"order_number" %}
+        <li class="stretch-card">
+            <strong>{{ item.stretch.name }}</strong><br>
+            {{ item.stretch.description }}
+        </li>
+    {% empty %}
+        <li>No stretches added.</li>
+    {% endfor %}
+</ol>
+
+<a href="/my_app/explore/">Back to Explore</a>
+
+<script>
+    const saveButton = document.getElementById("saveButton");
+
+    saveButton.addEventListener("click", function () {
+        const routineId = saveButton.dataset.routineId;
+
+        fetch(`/my_app/routine/${routineId}/save/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            saveButton.classList.remove("pulse");
+            void saveButton.offsetWidth;
+            saveButton.classList.add("pulse");
+
+            if (data.saved) {
+                saveButton.textContent = "Saved ✓";
+                saveButton.classList.remove("save");
+                saveButton.classList.add("unsave");
+            } else {
+                saveButton.textContent = "Save Routine";
+                saveButton.classList.remove("unsave");
+                saveButton.classList.add("save");
+            }
+        });
+    });
+</script>
+
+{% endblock %}

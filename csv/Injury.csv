@@ -1,0 +1,3 @@
+injury_id,user_id,body_area_id,pain_type_id,severity,date_occurred,notes,created_at
+1,1,3,3,4,2026-04-20,Neck stiffness after training,2026-04-20 10:00:00
+2,2,6,3,6,2026-04-18,Hamstring tightness while running,2026-04-18 09:30:00

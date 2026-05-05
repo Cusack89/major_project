@@ -1,0 +1,14 @@
+{% extends 'my_app/base.html' %}
+
+{% block title %}Log Injury{% endblock %}
+
+{% block content %}
+<h1>Log an Injury</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit">Save Injury</button>
+</form>
+{% endblock %}

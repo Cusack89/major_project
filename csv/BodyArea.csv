@@ -1,0 +1,7 @@
+body_area_id,name,parent_area
+1,Upper Body,
+2,Lower Body,
+3,Neck,1
+4,Shoulder,1
+5,Knee,2
+6,Hamstring,2

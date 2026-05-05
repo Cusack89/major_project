@@ -1,0 +1,93 @@
+{% extends "my_app/base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<h1>Profile</h1>
+
+<div class="profile-card">
+    <div class="profile-photo">
+        {% if request.user.profile.photo %}
+            <img src="{{ request.user.profile.photo.url }}" alt="Profile Photo" width="120">
+        {% else %}
+            <div style="width:120px;height:120px;border:1px solid #ccc;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                No Photo
+            </div>
+        {% endif %}
+    </div>
+
+    <h2>{{ request.user.username }}</h2>
+
+    <p><strong>Preferred Sport:</strong>
+        {% if request.user.profile.preferred_sport %}
+            {{ request.user.profile.preferred_sport }}
+        {% else %}
+            Not set
+        {% endif %}
+    </p>
+</div>
+
+<hr>
+
+<div style="display:flex; gap:20px;">
+    <div style="border:1px solid #ccc; padding:15px; flex:1;">
+        <h3>Current Health Status</h3>
+
+        {% if health_status >= 8 %}
+            <p style="font-size:32px; color:green;"><strong>{{ health_status }}/10</strong></p>
+        {% elif health_status >= 5 %}
+            <p style="font-size:32px; color:orange;"><strong>{{ health_status }}/10</strong></p>
+        {% else %}
+            <p style="font-size:32px; color:red;"><strong>{{ health_status }}/10</strong></p>
+        {% endif %}
+    </div>
+
+    <div style="border:1px solid #ccc; padding:15px; flex:1;">
+        <h3>Stretch Streak</h3>
+        <p style="font-size:32px;"><strong>{{ stretch_streak }}</strong> days</p>
+    </div>
+</div>
+
+<hr>
+
+<div style="border:1px solid #ccc; padding:15px;">
+    <h3>Saved Stretches</h3>
+
+    {% if saved_stretches %}
+        <ul>
+            {% for saved in saved_stretches %}
+                <li>{{ saved.stretch.name }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No saved stretches yet.</p>
+    {% endif %}
+</div>
+
+<hr>
+
+<div style="border:1px solid #ccc; padding:15px;">
+    <h3>Injury History</h3>
+
+    {% if injuries %}
+        <ul>
+            {% for injury in injuries %}
+                <li>
+                    <strong>{{ injury.body_area }}</strong> -
+                    {{ injury.pain_type }} -
+                    Severity: {{ injury.severity }}/10 -
+                    {{ injury.date_occurred }}
+                    <br>
+                    <a href="/my_app/recommendations/{{ injury.id }}/">View Recommendations</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No injuries logged yet.</p>
+    {% endif %}
+</div>
+
+<br>
+
+<a href="/my_app/injury/new/">Log a new injury</a>
+{% endblock %}

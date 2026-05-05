@@ -1,0 +1,55 @@
+{% extends "my_app/base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<h2>Welcome back, {{ request.user.username }}!</h2>
+
+<h1 style="font-size: 42px;">Athlete Overview</h1>
+
+<div style="border:1px solid #ccc; padding:20px; margin-bottom:20px;">
+    <h3>Stretching Streak</h3>
+    <p style="font-size:32px;"><strong>{{ stretch_streak }}</strong> days</p>
+</div>
+
+<div style="border:1px solid #ccc; padding:20px; margin-bottom:20px;">
+    <h3>Stretching Recommendations</h3>
+
+    {% if recommended_stretches %}
+        <ul>
+            {% for stretch in recommended_stretches %}
+                <li>{{ stretch.name }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No recommendations yet. Log an injury to get started.</p>
+    {% endif %}
+</div>
+
+<h2>Analytics</h2>
+
+<div style="display:flex; gap:20px; margin-bottom:20px;">
+    <div style="border:1px solid #ccc; padding:20px; flex:1;">
+        <h3>Average Recovery</h3>
+        <div style="height:220px; display:flex; align-items:center; justify-content:center; background:#f3f3f3;">
+            Average Recovery Graph
+        </div>
+    </div>
+
+    <div style="border:1px solid #ccc; padding:20px; flex:1;">
+        <h3>Injury Frequency</h3>
+        <div style="height:220px; display:flex; align-items:center; justify-content:center; background:#f3f3f3;">
+            Injury Frequency Graph
+        </div>
+    </div>
+</div>
+
+<div style="border:1px solid #ccc; padding:20px;">
+    <h3>Common Trends</h3>
+    <div style="height:260px; display:flex; align-items:center; justify-content:center; background:#f3f3f3;">
+        Common Trends Graph
+    </div>
+</div>
+
+{% endblock %}

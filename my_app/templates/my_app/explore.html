@@ -1,0 +1,149 @@
+{% extends "my_app/base.html" %}
+
+{% block title %}Explore{% endblock %}
+
+{% block content %}
+
+<style>
+    .top-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .search-form {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+    }
+
+    .search-form input {
+        padding: 8px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+
+    .search-form button {
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        background: #f2f2f2;
+        cursor: pointer;
+    }
+
+    .filter-btn {
+        padding: 10px 16px;
+        border-radius: 20px;
+        border: 1px solid #ccc;
+        background: #f2f2f2;
+        text-decoration: none;
+        color: black;
+        display: inline-block;
+        transition: background 0.2s ease;
+    }
+
+    .filter-btn.active {
+        background: #d0d0d0;
+        font-weight: bold;
+    }
+
+    .routine-card {
+        border: 1px solid #ccc;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 12px;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .routine-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .routine-cover {
+        width: 250px;
+        height: 140px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+
+    .tag {
+        background: #eee;
+        padding: 5px 10px;
+        border-radius: 12px;
+        margin-right: 5px;
+        display: inline-block;
+        font-size: 14px;
+    }
+
+    .routine-cover {
+        width: 180px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+</style>
+
+<!-- HEADER -->
+<div class="top-row">
+    <h1>Explore & Discover</h1>
+
+    <form method="GET" action="/my_app/explore/" class="search-form">
+        <input type="text"
+               name="q"
+               placeholder="Search routines..."
+               value="{{ search_query|default_if_none:'' }}">
+
+        {% if selected_filter %}
+            <input type="hidden" name="filter" value="{{ selected_filter }}">
+        {% endif %}
+
+        <button type="submit">🔍</button>
+    </form>
+</div>
+
+<!-- FILTERS -->
+<div style="display:flex; gap:10px; flex-wrap:wrap; margin:20px 0;">
+    <a href="/my_app/explore/"
+       class="filter-btn {% if not selected_filter %}active{% endif %}">
+        All
+    </a>
+
+    {% for label in labels %}
+        <a href="/my_app/explore/?filter={{ label.name }}{% if search_query %}&q={{ search_query }}{% endif %}"
+           class="filter-btn {% if selected_filter == label.name %}active{% endif %}">
+            {{ label.name }}
+        </a>
+    {% endfor %}
+</div>
+
+<!-- ROUTINES -->
+{% if routines %}
+    {% for routine in routines %}
+
+        <a href="/my_app/routine/{{ routine.id }}/" style="text-decoration:none; color:inherit;">
+            <div class="routine-card" style="display:flex; gap:20px; align-items:center;">
+
+                {% if routine.cover_image_url %}
+                    <img src="{{ routine.cover_image_url }}" alt="{{ routine.title }}" class="routine-cover">
+                {% endif %}
+
+                <div>
+                    <h2>{{ routine.title }}</h2>
+                    <p>{{ routine.description|truncatewords:25 }}</p>
+
+                    {% for label in routine.labels.all %}
+                        <span class="tag">{{ label.name }}</span>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </a>
+
+    {% endfor %}
+{% else %}
+    <p>No routines found.</p>
+{% endif %}
+
+{% endblock %}
