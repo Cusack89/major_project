@@ -46,9 +46,9 @@ class StretchAdmin(admin.ModelAdmin):
 
 @admin.register(Injury)
 class InjuryAdmin(admin.ModelAdmin):
-    list_display = ("user", "body_area", "pain_type", "severity", "date_occurred", "created_at")
+    list_display = ("user", "pain_type", "severity", "date_occurred", "created_at")
     search_fields = ("user__username", "body_area__name", "pain_type__name")
-    list_filter = ("body_area", "pain_type", "severity", "date_occurred")
+    list_filter = ( "pain_type", "severity", "date_occurred")
 
 
 @admin.register(StretchMapping)

@@ -1,14 +1,91 @@
-{% extends 'my_app/base.html' %}
+{% extends "my_app/base.html" %}
+{% load static %}
 
 {% block title %}Log Injury{% endblock %}
 
 {% block content %}
-<h1>Log an Injury</h1>
 
-<form method="POST">
+<h1>Log Injury</h1>
+
+<form method="post" class="injury-log-form">
     {% csrf_token %}
-    {{ form.as_p }}
 
-    <button type="submit">Save Injury</button>
+    <section class="form-card">
+        <h2>Injury Location</h2>
+
+        {{ form.injury_location }}
+
+        <div class="anatomy-select">
+            <div class="anatomy-box">
+                <img src="{% static 'my_app/muscle-front.png' %}" alt="Front muscle anatomy">
+
+                <button type="button" class="muscle-btn chest" data-muscle="Chest">Chest</button>
+                <button type="button" class="muscle-btn abs" data-muscle="Abs">Abs</button>
+                <button type="button" class="muscle-btn quad" data-muscle="Quadriceps">Quad</button>
+            </div>
+
+            <div class="anatomy-box">
+                <img src="{% static 'my_app/muscle-back.png' %}" alt="Back muscle anatomy">
+
+                <button type="button" class="muscle-btn back" data-muscle="Back">Back</button>
+                <button type="button" class="muscle-btn hamstring" data-muscle="Hamstring">Hamstring</button>
+                <button type="button" class="muscle-btn calf" data-muscle="Calf">Calf</button>
+            </div>
+        </div>
+
+        <p>Selected muscle: <strong id="selected-muscle">None</strong></p>
+    </section>
+
+    <section class="form-card">
+        <label>Type of Pain</label>
+        {{ form.type_of_pain }}
+    </section>
+
+    <section class="form-card">
+        <label>Pain Level</label>
+
+        {{ form.pain_level }}
+
+        <p>Pain level: <strong id="pain-value">5</strong>/10</p>
+    </section>
+
+    <section class="form-card">
+        <label>Date</label>
+        {{ form.date }}
+    </section>
+
+    <section class="form-card">
+        <label>Additional Notes</label>
+        {{ form.notes }}
+    </section>
+
+    <button type="submit" class="submit-btn">Submit Injury Log</button>
+
 </form>
+
+<script>
+    const muscleButtons = document.querySelectorAll(".muscle-btn");
+    const injuryLocationInput = document.querySelector("#id_injury_location");
+    const selectedMuscleText = document.querySelector("#selected-muscle");
+
+    muscleButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            const muscle = button.dataset.muscle;
+
+            injuryLocationInput.value = muscle;
+            selectedMuscleText.textContent = muscle;
+
+            muscleButtons.forEach(btn => btn.classList.remove("selected"));
+            button.classList.add("selected");
+        });
+    });
+
+    const painSlider = document.querySelector("#id_pain_level");
+    const painValue = document.querySelector("#pain-value");
+
+    painSlider.addEventListener("input", () => {
+        painValue.textContent = painSlider.value;
+    });
+</script>
+
 {% endblock %}

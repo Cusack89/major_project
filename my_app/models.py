@@ -36,7 +36,7 @@ class Stretch(models.Model):
 
 class Injury(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="injuries")
-    body_area = models.ForeignKey(BodyArea, on_delete=models.CASCADE)
+    location = models.ForeignKey(BodyArea, on_delete=models.CASCADE)
     pain_type = models.ForeignKey(PainType, on_delete=models.CASCADE)
     severity = models.IntegerField()
     date_occurred = models.DateField()
