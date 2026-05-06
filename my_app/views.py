@@ -152,12 +152,11 @@ def explore(request):
 
 @login_required
 def profile(request):
+    injuries = Injury.objects.filter(user=request.user).order_by("-created_at")
 
-    injuries = Injury.objects.filter(
-        user=request.user
-    ).order_by("-created_at")
-
-    saved_routines = request.user.saved_routines.all()
+    saved_routines = Routine.objects.filter(
+        savedroutine__user=request.user
+    )
 
     return render(request, "my_app/profile.html", {
         "injuries": injuries,
@@ -165,7 +164,6 @@ def profile(request):
         "stretch_streak": 0,
         "saved_stretches": [],
         "saved_routines": saved_routines,
-
     })
 
 @login_required

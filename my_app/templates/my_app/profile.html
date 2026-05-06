@@ -1,8 +1,6 @@
 {% extends "my_app/base.html" %}
 
-{% block title %}
-Profile
-{% endblock %}
+{% block title %}Profile{% endblock %}
 
 {% block content %}
 
@@ -12,10 +10,16 @@ Profile
 
         <h1>Profile</h1>
 
-        <div class="profile-user-section">
+        <a href="{% url 'my_app:settings' %}"
+        class="manage-account-btn">
+            Manage Account
+        </a>
+
+    </div>
+
+    <div class="profile-top-section">
 
         <div class="profile-user-section">
-
             <div class="profile-photo">
                 {% if request.user.profile.profile_picture %}
                     <img src="{{ request.user.profile.profile_picture.url }}" alt="Profile Photo">
@@ -28,26 +32,26 @@ Profile
                 <h2>{{ request.user.profile.nickname }}</h2>
                 <p class="profile-sport">{{ request.user.profile.sport }}</p>
             </div>
+        </div>
 
+        <div class="profile-stats-column">
+            <section class="profile-card profile-stat-card">
+                <h2>Health Status</h2>
+                <p class="profile-number">{{ health_status }}/10</p>
+            </section>
+
+            <section class="profile-card profile-stat-card">
+                <h2>Stretch Streak</h2>
+                <p class="profile-number">{{ stretch_streak }} days</p>
+            </section>
         </div>
 
     </div>
 
     <div class="profile-grid">
 
-        <section class="profile-card profile-stat-card">
-            <h2>Health Status</h2>
-            <p class="profile-number">{{ health_status }}/10</p>
-        </section>
-
-        <section class="profile-card profile-stat-card">
-            <h2>Stretch Streak</h2>
-            <p class="profile-number">{{ stretch_streak }} days</p>
-        </section>
-
         <section class="profile-card profile-wide-card">
             <h2>Saved Stretches</h2>
-
             {% if saved_stretches %}
                 <ul>
                     {% for stretch in saved_stretches %}
@@ -61,32 +65,35 @@ Profile
 
         <section class="profile-card profile-wide-card">
             <h2>Saved Routines</h2>
-
-            {% if saved_routines %}
-                <ul>
+            <div class="saved-routines-container">
+                {% if saved_routines %}
                     {% for routine in saved_routines %}
-                        <li>
-                            <a href="{% url 'my_app:routine_detail' routine.id %}">
-                                {{ routine.title }}
-                            </a>
-                        </li>
+                        <a href="{% url 'my_app:routine_detail' routine.id %}"
+                        class="saved-routine-card-link">
+                            <div class="saved-routine-card">
+                                <h3>{{ routine.title }}</h3>
+                                <p>
+                                    {{ routine.description|truncatewords:25 }}
+                                </p>
+                                <p>
+                                    <strong>Difficulty:</strong>
+                                    {{ routine.difficulty }}
+                                </p>
+                            </div>
+                        </a>
                     {% endfor %}
-                </ul>
-            {% else %}
-                <p>No saved routines yet.</p>
-            {% endif %}
+                {% else %}
+                    <p>No saved routines yet.</p>
+                {% endif %}
+            </div>
         </section>
 
-        <section class="profile-card profile-wide-card">
+        <section class="profile-card injury-history-card">
             <h2>Injury History</h2>
-
             {% if injuries %}
                 <ul>
                     {% for injury in injuries %}
-                        <li>
-                            {{ injury.injury_type }} -
-                            {{ injury.created_at|date:"d M Y" }}
-                        </li>
+                        <li>{{ injury.injury_type }} - {{ injury.created_at|date:"d M Y" }}</li>
                     {% endfor %}
                 </ul>
             {% else %}

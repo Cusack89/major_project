@@ -17,29 +17,38 @@
 
     {% if request.user.is_authenticated %}
 
-    <div class="navbar">
+  <div class="navbar">
 
-        <!-- Navigation links -->
-        <div class="nav-center">
-            <a href="{% url 'my_app:dashboard' %}">Dashboard</a>
-            <a href="{% url 'my_app:explore' %}">Explore</a>
-            <a href="{% url 'my_app:profile' %}">Profile</a>
-            <a href="{% url 'my_app:injury_history' %}">History</a>
-        </div>
+    <!-- LEFT -->
+    <div class="nav-left">
+        <a href="{% url 'my_app:dashboard' %}" class="logo-link">
+            <img src="{% static 'my_app/images/logo.png' %}"
+                 alt="Xtend Logo"
+                 class="navbar-logo">
+        </a>
+    </div>
 
-        <!-- User info + logout -->
-        <div class="user-info">
+    <!-- CENTER -->
+    <div class="nav-center">
+        <a href="{% url 'my_app:explore' %}">Explore</a>
+        <a href="{% url 'my_app:injury_form' %}">Log</a>
+        <a href="{% url 'my_app:profile' %}">Profile</a>
+        <a href="{% url 'my_app:injury_history' %}">History</a>
+    </div>
 
-            <span>{{ request.user.username }}</span>
+    <!-- RIGHT -->
+    <div class="user-info">
 
-            <form action="{% url 'users:logout' %}" method="post">
-                {% csrf_token %}
-                <button type="submit">Logout</button>
-            </form>
+        <span>{{ request.user.username }}</span>
 
-        </div>
+        <form action="{% url 'users:logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
 
     </div>
+
+</div>
 
     {% else %}
 
@@ -56,20 +65,24 @@
 
 </header>
 
-{% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li class="{{ message.tags }}">
-                {{ message }}
-            </li>
-        {% endfor %}
-    </ul>
-{% endif %}
+<div class="page-container">
 
-<main>
-    {% block content %}
-    {% endblock %}
-</main>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">
+                    {{ message }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+</div>
 
 <footer>
     <p>&copy; 2026 Oakhill College Year 12 Major Project</p>
