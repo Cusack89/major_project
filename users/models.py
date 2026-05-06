@@ -12,14 +12,19 @@ def ensure_profile(sender, instance: User, created, **kwargs):
         profile.save(update_fields=["nickname"])
 
 class Profile(models.Model):
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE,
-        related_name="users_profile"
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    nickname = models.CharField(max_length=100, blank=True)
+    sport = models.CharField(max_length=100, blank=True)
+
+    profile_picture = models.ImageField(
+        upload_to="profile_pictures/",
+        blank=True,
+        null=True
     )
-    nickname = models.CharField(max_length=30, unique=True)
+
     def __str__(self):
-        return self.user.username
+        return self.nickname or self.user.username
 
 def _unique_nickname(base: str) -> str:
     base = (base or "user").strip() or "user"

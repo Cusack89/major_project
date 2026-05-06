@@ -1,93 +1,101 @@
 {% extends "my_app/base.html" %}
 
-{% block title %}Profile{% endblock %}
+{% block title %}
+Profile
+{% endblock %}
 
 {% block content %}
-<h1>Profile</h1>
 
-<div class="profile-card">
-    <div class="profile-photo">
-        {% if request.user.profile.photo %}
-            <img src="{{ request.user.profile.photo.url }}" alt="Profile Photo" width="120">
-        {% else %}
-            <div style="width:120px;height:120px;border:1px solid #ccc;border-radius:50%;display:flex;align-items:center;justify-content:center;">
-                No Photo
+<div class="page-container">
+
+    <div class="profile-header">
+
+        <h1>Profile</h1>
+
+        <div class="profile-user-section">
+
+        <div class="profile-user-section">
+
+            <div class="profile-photo">
+                {% if request.user.profile.profile_picture %}
+                    <img src="{{ request.user.profile.profile_picture.url }}" alt="Profile Photo">
+                {% else %}
+                    <span class="profile-placeholder">Default Profile Picture</span>
+                {% endif %}
             </div>
-        {% endif %}
+
+            <div class="profile-user-info">
+                <h2>{{ request.user.profile.nickname }}</h2>
+                <p class="profile-sport">{{ request.user.profile.sport }}</p>
+            </div>
+
+        </div>
+
     </div>
 
-    <h2>{{ request.user.username }}</h2>
+    <div class="profile-grid">
 
-    <p><strong>Preferred Sport:</strong>
-        {% if request.user.profile.preferred_sport %}
-            {{ request.user.profile.preferred_sport }}
-        {% else %}
-            Not set
-        {% endif %}
-    </p>
-</div>
+        <section class="profile-card profile-stat-card">
+            <h2>Health Status</h2>
+            <p class="profile-number">{{ health_status }}/10</p>
+        </section>
 
-<hr>
+        <section class="profile-card profile-stat-card">
+            <h2>Stretch Streak</h2>
+            <p class="profile-number">{{ stretch_streak }} days</p>
+        </section>
 
-<div style="display:flex; gap:20px;">
-    <div style="border:1px solid #ccc; padding:15px; flex:1;">
-        <h3>Current Health Status</h3>
+        <section class="profile-card profile-wide-card">
+            <h2>Saved Stretches</h2>
 
-        {% if health_status >= 8 %}
-            <p style="font-size:32px; color:green;"><strong>{{ health_status }}/10</strong></p>
-        {% elif health_status >= 5 %}
-            <p style="font-size:32px; color:orange;"><strong>{{ health_status }}/10</strong></p>
-        {% else %}
-            <p style="font-size:32px; color:red;"><strong>{{ health_status }}/10</strong></p>
-        {% endif %}
+            {% if saved_stretches %}
+                <ul>
+                    {% for stretch in saved_stretches %}
+                        <li>{{ stretch.name }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No saved stretches yet.</p>
+            {% endif %}
+        </section>
+
+        <section class="profile-card profile-wide-card">
+            <h2>Saved Routines</h2>
+
+            {% if saved_routines %}
+                <ul>
+                    {% for routine in saved_routines %}
+                        <li>
+                            <a href="{% url 'my_app:routine_detail' routine.id %}">
+                                {{ routine.title }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No saved routines yet.</p>
+            {% endif %}
+        </section>
+
+        <section class="profile-card profile-wide-card">
+            <h2>Injury History</h2>
+
+            {% if injuries %}
+                <ul>
+                    {% for injury in injuries %}
+                        <li>
+                            {{ injury.injury_type }} -
+                            {{ injury.created_at|date:"d M Y" }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No injuries recorded yet.</p>
+            {% endif %}
+        </section>
+
     </div>
 
-    <div style="border:1px solid #ccc; padding:15px; flex:1;">
-        <h3>Stretch Streak</h3>
-        <p style="font-size:32px;"><strong>{{ stretch_streak }}</strong> days</p>
-    </div>
 </div>
 
-<hr>
-
-<div style="border:1px solid #ccc; padding:15px;">
-    <h3>Saved Stretches</h3>
-
-    {% if saved_stretches %}
-        <ul>
-            {% for saved in saved_stretches %}
-                <li>{{ saved.stretch.name }}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No saved stretches yet.</p>
-    {% endif %}
-</div>
-
-<hr>
-
-<div style="border:1px solid #ccc; padding:15px;">
-    <h3>Injury History</h3>
-
-    {% if injuries %}
-        <ul>
-            {% for injury in injuries %}
-                <li>
-                    <strong>{{ injury.body_area }}</strong> -
-                    {{ injury.pain_type }} -
-                    Severity: {{ injury.severity }}/10 -
-                    {{ injury.date_occurred }}
-                    <br>
-                    <a href="/my_app/recommendations/{{ injury.id }}/">View Recommendations</a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No injuries logged yet.</p>
-    {% endif %}
-</div>
-
-<br>
-
-<a href="/my_app/injury/new/">Log a new injury</a>
 {% endblock %}

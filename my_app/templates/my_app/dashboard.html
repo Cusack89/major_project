@@ -8,23 +8,29 @@
 
 <h1 style="font-size: 42px;">Athlete Overview</h1>
 
-<div style="border:1px solid #ccc; padding:20px; margin-bottom:20px;">
-    <h3>Stretching Streak</h3>
-    <p style="font-size:32px;"><strong>{{ stretch_streak }}</strong> days</p>
-</div>
+<div class="dashboard-grid">
 
-<div style="border:1px solid #ccc; padding:20px; margin-bottom:20px;">
-    <h3>Stretching Recommendations</h3>
+    <section class="dashboard-card">
+        <h3>Stretch Streak</h3>
+        <p style="font-size:32px;">
+            <strong>{{ stretch_streak }}</strong> days
+        </p>
+    </section>
 
-    {% if recommended_stretches %}
-        <ul>
-            {% for stretch in recommended_stretches %}
-                <li>{{ stretch.name }}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No recommendations yet. Log an injury to get started.</p>
-    {% endif %}
+    <section class="dashboard-card">
+        <h3>Recommended Stretches</h3>
+
+        {% if recommended_stretches %}
+            <ul>
+                {% for stretch in recommended_stretches %}
+                    <li>{{ stretch.name }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No recommendations yet.</p>
+        {% endif %}
+    </section>
+
 </div>
 
 <h2>Analytics</h2>

@@ -1,0 +1,21 @@
+{% extends "my_app/base.html" %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+
+<h1>Manage Account</h1>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit">Save Changes</button>
+</form>
+
+<br>
+
+<a href="/my_app/profile/">Back to Profile</a>
+
+{% endblock %}

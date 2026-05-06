@@ -1,19 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    nickname = models.CharField(max_length=100, blank=True)
-    sport = models.CharField(max_length=100, blank=True)
-    profile_picture = models.ImageField(upload_to="profile_pictures/", blank=True, null=True)
-    injury_history = models.TextField(blank=True)
-    saved_stretches = models.TextField(blank=True)
-
-    def __str__(self):
-        return self.nickname or self.user.username
-
-
 class BodyArea(models.Model):
     name = models.CharField(max_length=100)
     parent_area = models.ForeignKey(
@@ -69,21 +56,12 @@ class StretchMapping(models.Model):
         return f"{self.body_area} + {self.pain_type} → {self.stretch}"
 
 
-class NotificationSettings(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    reminders_enabled = models.BooleanField(default=False)
-    reminder_time = models.TimeField(blank=True, null=True)
-    frequency = models.CharField(max_length=50, blank=True)
-
-    def __str__(self):
-        return f"Notifications for {self.user.username}"
-
 
 class SavedStretch(models.Model):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        related_name="my_app_profile"
+        related_name="users_profile"
     )
     stretch = models.ForeignKey(Stretch, on_delete=models.CASCADE)
     saved_at = models.DateTimeField(auto_now_add=True)
@@ -112,6 +90,12 @@ class Routine(models.Model):
 
     labels = models.ManyToManyField("RoutineLabel", blank=True)
     stretches = models.ManyToManyField("Stretch", through="RoutineStretch")
+
+    saved_by = models.ManyToManyField(
+        User,
+        related_name="saved_routines",
+        blank=True
+    )
 
     def __str__(self):
         return self.title

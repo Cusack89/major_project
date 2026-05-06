@@ -52,3 +52,8 @@ class EmailAuthenticationForm(AuthenticationForm):
         label="Email",
         widget=forms.EmailInput(attrs={"autofocus": True})
     )
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ["nickname", "sport", "profile_picture"]

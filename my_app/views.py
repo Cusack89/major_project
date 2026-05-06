@@ -6,7 +6,9 @@ from django.http import JsonResponse
 
 from django.contrib.auth.decorators import login_required
 
-from .models import Injury, Stretch, StretchMapping, SavedStretch, Profile, Routine, RoutineLabel, SavedRoutine
+from .models import Injury, Stretch, StretchMapping, SavedStretch, Routine, RoutineLabel, SavedRoutine
+from users.models import Profile
+from users.forms import ProfileUpdateForm
 from .forms import InjuryForm
 
 def signup_view(request):
@@ -35,12 +37,12 @@ def login_view(request):
     else:
         form = AuthenticationForm()
 
-    return render(request, "my_app/login.html", {"form": form})
+    return render(request, "users/login.html", {"form": form})
 
 
 def logout_view(request):
     logout(request)
-    return redirect("login")
+    return redirect("users:login")
 
 
 @login_required
@@ -105,7 +107,7 @@ def save_stretch(request, stretch_id):
         stretch=stretch
     )
 
-    return redirect("my_app/profile")
+    return redirect("users/profile")
 
 
 @login_required
@@ -150,18 +152,38 @@ def explore(request):
 
 @login_required
 def profile(request):
-    injuries = Injury.objects.filter(user=request.user).order_by("-created_at")
+
+    injuries = Injury.objects.filter(
+        user=request.user
+    ).order_by("-created_at")
+
+    saved_routines = request.user.saved_routines.all()
 
     return render(request, "my_app/profile.html", {
         "injuries": injuries,
         "health_status": 7,
         "stretch_streak": 0,
         "saved_stretches": [],
+        "saved_routines": saved_routines,
+
     })
 
 @login_required
 def settings_view(request):
-    return render(request, "my_app/settings.html")
+    profile = request.user.profile
+
+    if request.method == "POST":
+        form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
+
+        if form.is_valid():
+            form.save()
+            return redirect("/my_app/profile/")
+    else:
+        form = ProfileUpdateForm(instance=profile)
+
+    return render(request, "my_app/settings.html", {
+        "form": form
+    })
 
 @login_required
 def routine_detail(request, routine_id):

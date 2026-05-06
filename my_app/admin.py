@@ -1,12 +1,11 @@
 from django.contrib import admin
+from users.models import Profile
 from .models import (
-    Profile,
     BodyArea,
     PainType,
     Stretch,
     Injury,
     StretchMapping,
-    NotificationSettings,
     SavedStretch,
     Routine,
     RoutineLabel,
@@ -16,9 +15,15 @@ from .models import (
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ("user", "nickname", "sport")
-    search_fields = ("user__username", "nickname", "sport")
+    list_display = (
+        "user",
+        "nickname",
+        "sport",
+        "profile_picture",
 
+    )
+
+    search_fields = ("user__username", "nickname", "sport")
 
 @admin.register(BodyArea)
 class BodyAreaAdmin(admin.ModelAdmin):
@@ -51,13 +56,6 @@ class StretchMappingAdmin(admin.ModelAdmin):
     list_display = ("body_area", "pain_type", "stretch")
     search_fields = ("body_area__name", "pain_type__name", "stretch__name")
     list_filter = ("body_area", "pain_type")
-
-
-@admin.register(NotificationSettings)
-class NotificationSettingsAdmin(admin.ModelAdmin):
-    list_display = ("user", "reminders_enabled", "reminder_time", "frequency")
-    list_filter = ("reminders_enabled", "frequency")
-    search_fields = ("user__username",)
 
 
 @admin.register(SavedStretch)

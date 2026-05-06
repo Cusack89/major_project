@@ -1,57 +1,79 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>{% block title %}Major Project{% endblock %}</title>
+
     <link rel="stylesheet" href="{% static 'my_app/styles.css' %}">
 </head>
 
 <body>
-    <header>
-        <div class="top-bar">
 
-            <div class="user-info">
-                {% if request.user.is_authenticated %}
-                    <span>{{ request.user.username }}</span>
+<header>
 
-                    <form action="{% url 'users:logout' %}" method="post" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit">Logout</button>
-                    </form>
-                {% else %}
-                    <a href="{% url 'users:login' %}">Login</a>
-                    <a href="{% url 'users:register' %}">Register</a>
-                {% endif %}
-            </div>
+    {% if request.user.is_authenticated %}
+
+    <div class="navbar">
+
+        <!-- Navigation links -->
+        <div class="nav-center">
+            <a href="{% url 'my_app:dashboard' %}">Dashboard</a>
+            <a href="{% url 'my_app:explore' %}">Explore</a>
+            <a href="{% url 'my_app:profile' %}">Profile</a>
+            <a href="{% url 'my_app:injury_history' %}">History</a>
+        </div>
+
+        <!-- User info + logout -->
+        <div class="user-info">
+
+            <span>{{ request.user.username }}</span>
+
+            <form action="{% url 'users:logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
 
         </div>
 
-        <!-- NAV BAR -->
-        {% if request.user.is_authenticated %}
-        <nav class="main-nav" style="margin-bottom: 30px;">            <a href="{% url 'my_app:dashboard' %}">Dashboard</a> |
-            <a href="{% url 'my_app:injury_form' %}">Log Injury</a> |
-            <a href="{% url 'my_app:explore' %}">Explore</a> |
-            <a href="{% url 'my_app:profile' %}">Profile</a>
-        </nav>
-        {% endif %}
+    </div>
 
-    </header>
+    {% else %}
 
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li class="{{ message.tags }}">{{ message }}</li>
-            {% endfor %}
-        </ul>
+    <div class="navbar">
+
+        <div class="nav-center">
+            <a href="{% url 'users:login' %}">Login</a>
+            <a href="{% url 'users:register' %}">Register</a>
+        </div>
+
+    </div>
+
     {% endif %}
 
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
+</header>
 
-    <footer>
-        <p>&copy; 2026 Oakhill College Year 12 Major Project</p>
-    </footer>
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">
+                {{ message }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+<main>
+    {% block content %}
+    {% endblock %}
+</main>
+
+<footer>
+    <p>&copy; 2026 Oakhill College Year 12 Major Project</p>
+</footer>
+
 </body>
 </html>

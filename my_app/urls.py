@@ -5,6 +5,7 @@ app_name = "my_app"
 
 urlpatterns = [
     path("", views.dashboard, name="dashboard"),
+    path("dashboard/", views.dashboard, name="dashboard_page"),
     path("signup/", views.signup_view, name="signup"),
     path("login/", views.login_view, name="login"),
     path("logout/", views.logout_view, name="logout"),
@@ -19,4 +20,5 @@ urlpatterns = [
     path("settings/", views.settings_view, name="settings"),
 
     path("routine/<int:routine_id>/", views.routine_detail, name="routine_detail"),
-path("routine/<int:routine_id>/save/", views.toggle_save_routine, name="toggle_save_routine"),]
+    path("routine/<int:routine_id>/save/", views.toggle_save_routine, name="toggle_save_routine"),
+    ]
