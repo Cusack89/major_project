@@ -1,11 +1,9 @@
 # Xtend
-### Project purpose:
 Xtend is an injury tracking and recovery support web app designed to help athletes log injuries, monitor injury history, access recommended stretches, and manage saved routines.
 
-### Target users:
 Elite adolescent athletes, especially high school students in Years 8-12 who participate in regular sport and want to better manage injury prevention and recovery.
 
-###Key features:  
+### Key features:  
 - User registration, login, and logout
 - Personal profile page
 - Manage account page
