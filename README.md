@@ -1,5 +1,4 @@
-# major_project
-## Project name: Xtend
+# Xtend
 ### Project purpose:
 Xtend is an injury tracking and recovery support web app designed to help athletes log injuries, monitor injury history, access recommended stretches, and manage saved routines.
 
